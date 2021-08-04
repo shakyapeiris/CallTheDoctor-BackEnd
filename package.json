@@ -1,0 +1,23 @@
+{
+  "name": "call-the-doctor-api",
+  "version": "1.0.0",
+  "description": "This is the backend built for call-the-doctor-application which is used to send messages to nearest hospital incase of any emergency.",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "mongodb": "^4.0.1",
+    "mongoose": "^5.13.5",
+    "nodemon": "^2.0.12",
+    "pusher": "^5.0.0",
+    "socket.io": "^4.1.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Team SURGE",
+  "license": "ISC"
+}
