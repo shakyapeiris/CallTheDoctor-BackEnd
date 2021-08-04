@@ -26,8 +26,10 @@ mongoose
   )
   .then((result) => {
     console.log("Database Connected!");
-    app.listen(8000);
+    
   })
   .catch((err) => {
     console.log(err);
   });
+
+app.listen(8000);
