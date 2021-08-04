@@ -12,7 +12,7 @@ exports.getRecord = (req, res, next) => {
     }).then(result => {
         const userId = result.patientId._id;
         Record.find({patientId: userId, discharged: true}).then(data => {
-            res.send({...result, pastRecords: data})
+            res.send({...result._doc, pastRecords: data})
         })
     });
 };
