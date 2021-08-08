@@ -18,6 +18,7 @@ exports.postRegister = (req, res, next) => {
       address: req.body.address,
       diseases: req.body.diseases,
       email: req.body.email,
+      contactNo: req.body.contactNo,
     });
 
     newUser.setPassword(req.body.password);
@@ -73,6 +74,8 @@ exports.postLogin = (req, res, next) => {
 
 exports.sendNotification = (req, res, next) => {
   const userCordinates = req.body.cordinates;
+  const patient =  req.body.userId;
+  console.log(patient)
   let detail = {
     distance: 0,
     portalId: null,
@@ -86,8 +89,7 @@ exports.sendNotification = (req, res, next) => {
           admin.cordinates.lat,
           admin.cordinates.long
         );
-        if ((detail.distance == 0 || gap < detail.distance) && admin.verified) {
-          
+        if ((detail.portalId == null || gap < detail.distance) && admin.verified) {
           detail.distance = gap;
           detail.portalId = admin._id;
         }
@@ -101,17 +103,20 @@ exports.sendNotification = (req, res, next) => {
     })
     .then((data) => {
       const newRecord = new Record({
-        patientId: req.body.userId,
+        patientId: patient,
         portalId: data.portalId,
         date: new Date().toISOString().split("T")[0],
         cause: "",
         location: userCordinates
       });
 
+
+      
+
       newRecord
         .save()
         .then((response) => {
-          pusher.trigger("my-channel", "my-event", response);
+          pusher.trigger("my-channel", response.portalId, response);
           res.send({
             message: "Successfully Recorded",
           });
@@ -125,12 +130,13 @@ exports.sendNotification = (req, res, next) => {
 exports.getProfile = (req, res, next) => {
   const userId = req.params.userId
   User.findById(userId).then(user => {
-    return{name: user.name, age: user.age, gender: user.gender, address: user.address, diseases: user.diseases}
+    return{name: user.name, age: user.age, gender: user.gender, address: user.address, diseases: user.diseases, contactNo: user.contactNo}
   }).catch(err => {
     console.log(err)
   })
   .then(data => {
     Record.find({patientId: userId, discharged: true}).then(result => {
+      console.log({...data, records: result})
       res.send({...data, records: result})
     })
   })

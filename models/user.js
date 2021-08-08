@@ -17,6 +17,9 @@ const userSchema = new Schema({
   address: {
     type: String,
   },
+  contactNo: {
+    type: String
+  },
   diseases: {
     type: [],
   },

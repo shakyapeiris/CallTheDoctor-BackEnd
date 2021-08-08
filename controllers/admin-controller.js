@@ -14,6 +14,7 @@ exports.postRegister = (req, res, next) => {
       email: req.body.email,
       cordinates: req.body.cordinates,
       address: req.body.address,
+      contactNo: req.body.contactNo,
     });
 
     newUser.setPassword(req.body.password);
@@ -23,23 +24,21 @@ exports.postRegister = (req, res, next) => {
       .then((result) => {
         return res.status(201).send({
           successful: true,
-          message: "User added successfully.",
+          message: "Admin added successfully.",
         });
       })
       .catch((err) => {
         console.log(err);
         return res.status(400).send({
           successful: false,
-          message: "Failed to add user.",
+          message: "Failed to add admin.",
         });
       });
   });
 };
 
 exports.postLogin = (req, res, next) => {
-  req.socket.on('message', data => {
-    socket.emit('new-message', data)
-  })
+  
   Admin.findOne({ email: req.body.email }, function (err, user) {
     if (user === null) {
       return res.status(400).send({
@@ -48,7 +47,7 @@ exports.postLogin = (req, res, next) => {
     } else {
       if (user.validPassword(req.body.password)) {
         return res.status(201).send({
-          message: "User Logged In",
+          message: user.verified? "User Logged In" : "You must have a verified account to continue",
           verified: user.verified,
           userId: user.verified? user._id : null
         });
@@ -63,9 +62,16 @@ exports.postLogin = (req, res, next) => {
 
 exports.getRecords = (req, res, next) => {
   const adminId = req.params.adminId;
-  Record.find({portalId: adminId, discharged: false}).then(result => {
-    res.send(result)
-  }).catch(err => {
-    console.log(err)
-  })
+  Admin.findById(adminId)
+    .then(user => {
+      Record
+      .find({portalId: adminId, discharged: false})
+      .then(result => {
+        res.send({...result, userDetails: user})
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
+  )
 }
