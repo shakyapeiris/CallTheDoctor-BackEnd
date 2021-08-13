@@ -75,3 +75,13 @@ exports.getRecords = (req, res, next) => {
     }
   )
 }
+
+exports.verifyAdmin = (req, res, next) => {
+  const admin = req.params.adminId;
+  Admin.findById(admin).then(user => {
+    if (user && user.verified) return res.send({validated: true})
+    res.send({validated: false})
+  }).catch(err => {
+    res.send({validated: false})
+  })
+}

@@ -8,4 +8,6 @@ router.post('/login', adminController.postLogin)
 
 router.get('/:adminId', adminController.getRecords)
 
+router.get('/verify/:adminId', adminController.verifyAdmin)
+
 module.exports = router

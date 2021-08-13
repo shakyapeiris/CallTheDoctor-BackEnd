@@ -10,4 +10,6 @@ router.post('/notify', clientControllers.sendNotification)
 
 router.get('/:userId', clientControllers.getProfile)
 
+router.get('/verify/:userId', clientControllers.verifiyUser)
+
 module.exports = router

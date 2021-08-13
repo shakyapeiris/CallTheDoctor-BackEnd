@@ -42,9 +42,9 @@ exports.postRegister = (req, res, next) => {
 const Pusher = require("pusher");
 
 const pusher = new Pusher({
-  appId: "1244992",
-  key: "67a3346664a3e2867e68",
-  secret: "ac04deb3254884b7eb12",
+  appId: process.env.PUSHER_APP_ID,
+  key: process.env.PUSHER_KEY,
+  secret: process.env.PUSHER_SECRET,
   cluster: "mt1",
   useTLS: true
 });
@@ -142,3 +142,12 @@ exports.getProfile = (req, res, next) => {
   })
 }
 
+exports.verifiyUser = (req, res, next) => {
+  const userId = req.params.userId;
+  User.findById(userId).then(user => {
+    if (user) return res.send({validated: true})
+    res.send({validated: false})
+  }).catch(err => {
+    res.send({validated: false})
+  })
+}
